@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vibrate</title>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    button {
+      padding: 1em 2em;
+      font-size: 1.2em;
+      margin-top: 20px;
+      background: #0f0;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Vibrate</h1>
+  <button id="vibrateBtn">Start Vibration</button>
+
+  <script>
+    let vibrating = false;
+    let vibrationInterval = null;
+
+    function startVibrating() {
+      vibrationInterval = setInterval(() => {
+        navigator.vibrate([300]);
+      }, 100); // vibrate every 400ms
+    }
+
+    function stopVibrating() {
+      clearInterval(vibrationInterval);
+      navigator.vibrate(0); // stop immediately
+    }
+
+    document.getElementById("vibrateBtn").addEventListener("click", () => {
+      if (!("vibrate" in navigator)) {
+        alert("Vibration API not supported on this device.");
+        return;
+      }
+
+      vibrating = !vibrating;
+
+      if (vibrating) {
+        startVibrating();
+        document.getElementById("vibrateBtn").textContent = "Stop Vibration";
+      } else {
+        stopVibrating();
+        document.getElementById("vibrateBtn").textContent = "Start Vibration";
+      }
+    });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('Service Worker registered', reg))
+        .catch(err => console.error('Service Worker registration failed', err));
+    });
+  }
+  </script>
+</body>
+</html>
